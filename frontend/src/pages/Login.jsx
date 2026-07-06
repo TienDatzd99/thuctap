@@ -8,7 +8,6 @@ export default function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // YÊU CẦU: BẠN HÃY VIẾT LOGIC CHO HÀM NÀY
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
