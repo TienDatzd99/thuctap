@@ -2,52 +2,54 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles.css';
 
-export default function Login() {
+export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
 
     try {
-      const response = await fetch('http://localhost:4000/api/auth/login', {
+      const response = await fetch('http://localhost:4000/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, fullName: name })
       });
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Đăng nhập thất bại')
+        setError(data.error || 'Đăng ký thất bại');
       } else {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        navigate('/');
-
+        navigate('/login');
       }
-
-
-    }
-    catch (err) {
+    } catch (err) {
       setError('Lỗi kết nối tới máy chủ, vui lòng thử lại.');
     }
-
-
-
   };
 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Đăng Nhập</h2>
+        <h2>Đăng Ký</h2>
         {error && <div className="error-message">{error}</div>}
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleRegister}>
+          <div className="form-group">
+            <label>Tên</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Nhập tên của bạn"
+              required
+            />
+          </div>
           <div className="form-group">
             <label>Email</label>
             <input
@@ -70,11 +72,11 @@ export default function Login() {
             />
           </div>
 
-          <button type="submit" className="btn-primary">Đăng nhập</button>
+          <button type="submit" className="btn-primary">Đăng ký</button>
         </form>
 
         <p className="auth-redirect">
-          Chưa có tài khoản? <span onClick={() => navigate('/register')}>Đăng ký ngay</span>
+          Đã có tài khoản? <span onClick={() => navigate('/login')}>Đăng nhập</span>
         </p>
       </div>
     </div>
